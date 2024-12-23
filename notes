@@ -1,0 +1,85 @@
+
+host.docker.internal
+-----------------------------------------------------------------------------------------------------------------------------
+
+3. Check Host IP Address
+If pgAdmin is running locally, use localhost or 127.0.0.1 as the host when configuring the connection.
+If pgAdmin is running in a different container, use the container's internal IP or container name as the host.
+To get the container's internal IP:
+
+bash
+Copy code
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <postgres_container_name>
+4. Ensure PostgreSQL is Accepting Remote Connections
+By default, PostgreSQL in Docker binds only to localhost. To accept connections from other hosts, modify the postgresql.conf file or pass the correct environment variable.
+
+If using a custom configuration:
+Add listen_addresses = '*' to postgresql.conf.
+Restart the PostgreSQL container.
+Alternatively, when starting the container, use this environment variable:
+
+bash
+Copy code
+-e POSTGRES_HOST_AUTH_METHOD=trust
+5. Update pg_hba.conf
+Ensure the PostgreSQL host-based authentication file (pg_hba.conf) allows connections from your pgAdmin host. Add an entry like:
+
+css
+Copy code
+host    all             all             0.0.0.0/0            md5
+Restart the PostgreSQL server after editing.
+
+6. Firewall or Network Issues
+If you're accessing PostgreSQL remotely, ensure your firewall allows traffic on port 5432.
+If pgAdmin and PostgreSQL are in separate Docker containers, ensure they are on the same Docker network.
+To add containers to the same network:
+
+bash
+Copy code
+docker network create my_network
+docker network connect my_network <pgadmin_container>
+docker network connect my_network <postgres_container>
+7. Test Connection with psql
+From your host machine, test the connection to PostgreSQL using psql:
+
+bash
+Copy code
+psql -h localhost -U postgres -d postgres
+Replace localhost, postgres, and postgres with the host, username, and database name as needed.
+
+8. Recheck pgAdmin Configuration
+In pgAdmin, ensure the connection details are correct:
+
+Host: localhost, 127.0.0.1, or the container's IP.
+Port: 5432
+Maintenance Database: postgres (default).
+Username and Password: Match the values used to configure the PostgreSQL container.
+9. Enable Logs for Further Debugging
+Enable logging in PostgreSQL to check for connection attempts and errors. Add this to your postgresql.conf:
+
+plaintext
+Copy code
+log_connections = on
+log_disconnections = on
+Then inspect the PostgreSQL logs for issues. If you’re using Docker, get logs with:
+
+bash
+Copy code
+docker logs <postgres_container_name>
+If the issue persists, let me know your container configuration (docker-compose.yml or docker run command) for more targeted help!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ docker network connect bridge 16ceb321b872

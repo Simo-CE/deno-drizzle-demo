@@ -12,8 +12,9 @@ services:
       - APP_DB_USER=docker
       - APP_DB_PASS=docker
       - APP_DB_NAME=drizzle_demo
+      - POSTGRES_HOST_AUTH_METHOD=trust
     healthcheck:
-      test: ["CMD-SHELL", "psql -U docker -d drizzle_demo -c 'SELECT 1' || exit 1"]
+      test: [ "CMD-SHELL", "psql -U docker -d drizzle_demo -c 'SELECT 1' || exit 1" ]
       interval: 10s
       timeout: 3s
       retries: 3

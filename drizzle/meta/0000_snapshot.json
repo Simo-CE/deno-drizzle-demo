@@ -1,7 +1,58 @@
 {
+  "id": "e262ade5-b89c-4788-b2af-ae5613c5c9d9",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.pets": {
+      "name": "pets",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "favorite_food": {
+          "name": "favorite_food",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pets_owner_id_users_id_fk": {
+          "name": "pets_owner_id_users_id_fk",
+          "tableFrom": "pets",
+          "tableTo": "users",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "public.users": {
       "name": "users",
       "schema": "",
@@ -16,6 +67,12 @@
           "name": "full_name",
           "type": "text",
           "primaryKey": false,
+          "notNull": true
+        },
+        "email_address": {
+          "name": "email_address",
+          "type": "varchar(256)",
+          "primaryKey": false,
           "notNull": false
         },
         "phone": {
@@ -28,16 +85,25 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "users_email_address_unique": {
+          "name": "users_email_address_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email_address"
+          ]
+        }
+      },
+      "checkConstraints": {}
     }
   },
   "enums": {},
   "schemas": {},
+  "sequences": {},
+  "views": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "id": "57d76e82-d3d2-4896-9844-029510094a84",
-  "prevId": "00000000-0000-0000-0000-000000000000"
+    "tables": {}
+  }
 }
